@@ -1,5 +1,6 @@
 import React from 'react';
 import { ChangeEvent } from 'react';
+import Input from './Input';
 
 interface SearchInputProps {
     searchInput: string;
@@ -8,14 +9,16 @@ interface SearchInputProps {
 
 const SearchInput: React.FC<SearchInputProps> = ({ searchInput, handleSearch }) => {
     return (
-        <div className="flex items-center justify-end">
-            <input
+
+        <div className='flex items-center justify-end'>
+            <Input
                 type="text"
                 value={searchInput}
                 onChange={handleSearch}
                 placeholder="Search User by ID"
-                className="rounded-md px-4 py-2 w-full md:w-64   focus:outline-none focus:bg-blue-100"
-            />
+                className='items-center justify-end'
+                />
+                
         </div>
     );
 };

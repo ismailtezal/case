@@ -16,7 +16,7 @@ const PaginationControl: React.FC<PaginationControlProps> = ({ currentPage, hand
             >
                 <ChevronLeft className='w-6 h-6' />
             </Button>
-            <span className='text-white mx-2'>{currentPage}</span>
+            <span className='text-white mx-2'>Page {currentPage}</span>
             <Button
                 onClick={handleNextPage}
                 className='text-white focus:outline-none'
