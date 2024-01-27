@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { ParsedUrlQuery } from 'querystring';
 import { useRouter } from 'next/router';
 
 import Card from './Card';
@@ -7,15 +8,12 @@ import SearchInput from './SearchInput';
 import { User } from '@/types/User';
 import { ApiResponse } from '@/types/ApiResponse';
 import axios from 'axios';
+import { usePagination } from '@/hooks/usePagination';
 
-const Result = () => {
-  const router = useRouter();
-  const { query } = router;
-  const [originalData, setOriginalData] = useState<User[]>([]);
+
+const useFetchData = (query: ParsedUrlQuery) => {
   const [data, setData] = useState<User[]>([]);
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [searchInput, setSearchInput] = useState<string>('');
-  const [searchMessage, setSearchMessage] = useState<string>('');
+  const [originalData, setOriginalData] = useState<User[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -24,8 +22,8 @@ const Result = () => {
       const url = `https://reqres.in/api/users?page=${page}&per_page=${per_page}`;
 
       try {
-        const response = await fetch(url);
-        const jsonData: ApiResponse = await response.json();
+        const response = await axios.get<ApiResponse>(url);
+        const jsonData: ApiResponse = response.data;
         setOriginalData(jsonData.data);
         setData(jsonData.data);
       } catch (error) {
@@ -36,25 +34,22 @@ const Result = () => {
     fetchData();
   }, [query]);
 
-  const handlePreviousPage = useCallback(() => {
-    if (currentPage > 1) {
-      const newPage = currentPage - 1;
-      router.push(`/?page=${newPage}`);
-      setCurrentPage(newPage);
-    }
-  }, [currentPage, router]);
+  return { data, originalData, setData };
+};
 
-  const handleNextPage = useCallback(() => {
-    if (currentPage < data.length) {
-      const newPage = currentPage + 1;
-      router.push(`/?page=${newPage}`);
-      setCurrentPage(newPage);
-    }
-  }, [currentPage, data.length, router]);
+
+
+const Result = () => {
+  const router = useRouter();
+  const { query } = router;
+  const { data, originalData, setData } = useFetchData(query as ParsedUrlQuery);
+  const { currentPage, handlePreviousPage, handleNextPage } = usePagination(data, router);
+  const [searchInput, setSearchInput] = useState<string>('');
+  const [searchMessage, setSearchMessage] = useState<string>('');
 
   const handleSearch = useCallback(async (searchValue: string) => {
     setSearchInput(searchValue);
-  
+
     if (searchValue === '') {
       setData(originalData);
       setSearchMessage('');
@@ -65,7 +60,6 @@ const Result = () => {
         setData(user ? [user] : []);
         setSearchMessage(user ? '' : 'No user with this ID found.');
       } catch (error) {
-        console.error('No user with this ID found.', error);
         setData([]);
       }
     }
