@@ -4,7 +4,7 @@ import Input from './Input';
 
 interface SearchInputProps {
     searchInput: string;
-    handleSearch: (event: ChangeEvent<HTMLInputElement>) => void;
+    handleSearch: (searchValue: string) => void; 
 }
 
 const SearchInput: React.FC<SearchInputProps> = ({ searchInput, handleSearch }) => {

@@ -1,29 +1,12 @@
-import React from 'react';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+
 import Card from './Card';
 import PaginationControl from './PaginationControl';
 import SearchInput from './SearchInput';
-
-interface User {
-  id: number;
-  email: string;
-  first_name: string;
-  last_name: string;
-  avatar: string;
-}
-
-interface ApiResponse {
-  page: number;
-  per_page: number;
-  total: number;
-  total_pages: number;
-  data: User[];
-  support: {
-    url: string;
-    text: string;
-  };
-}
+import { User } from '@/types/User';
+import { ApiResponse } from '@/types/ApiResponse';
+import axios from 'axios';
 
 const Result = () => {
   const router = useRouter();
@@ -53,35 +36,40 @@ const Result = () => {
     fetchData();
   }, [query]);
 
-  const handlePreviousPage = () => {
+  const handlePreviousPage = useCallback(() => {
     if (currentPage > 1) {
       const newPage = currentPage - 1;
       router.push(`/?page=${newPage}`);
       setCurrentPage(newPage);
     }
-  };
+  }, [currentPage, router]);
 
-  const handleNextPage = () => {
+  const handleNextPage = useCallback(() => {
     if (currentPage < data.length) {
       const newPage = currentPage + 1;
       router.push(`/?page=${newPage}`);
       setCurrentPage(newPage);
     }
-  };
+  }, [currentPage, data.length, router]);
 
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const searchValue = e.target.value;
+  const handleSearch = useCallback(async (searchValue: string) => {
     setSearchInput(searchValue);
-
+  
     if (searchValue === '') {
       setData(originalData);
       setSearchMessage('');
     } else {
-      const user = originalData.find((user) => user.id.toString() === searchValue);
-      setData(user ? [user] : []);
-      setSearchMessage(user ? '' : 'No user with this ID found.');
+      try {
+        const response = await axios.get(`https://reqres.in/api/users/${searchValue}`);
+        const user = response.data.data;
+        setData(user ? [user] : []);
+        setSearchMessage(user ? '' : 'No user with this ID found.');
+      } catch (error) {
+        console.error('No user with this ID found.', error);
+        setData([]);
+      }
     }
-  };
+  }, [originalData]);
 
   return (
     <div className="flex flex-col gap-2 bg-blue-500 m-4 p-4 rounded-md shadow-md">

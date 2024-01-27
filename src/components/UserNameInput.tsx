@@ -3,7 +3,7 @@ import Input from './Input';
 
 interface UserNameInputProps {
     value: string;
-    handleSearch: React.Dispatch<React.SetStateAction<string>>;
+    handleSearch: (value: string) => void; 
 }
 
 const UserNameInput: React.FC<UserNameInputProps> = ({ value, handleSearch }) => {
@@ -11,7 +11,7 @@ const UserNameInput: React.FC<UserNameInputProps> = ({ value, handleSearch }) =>
         <Input
             type="text"
             value={value}
-            onChange={(event) => handleSearch(event.target.value)} 
+            onChange={(newValue) => handleSearch(newValue)} 
             placeholder="Name"
         />
     );
