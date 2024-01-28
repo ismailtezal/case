@@ -1,4 +1,4 @@
-import { ApiResponse } from "@/types/ApiResponse";
+import { ApiResponse } from "@/types/PageResponse";
 import { User } from "@/types/User";
 
 export interface ApiServiceResult {

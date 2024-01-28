@@ -1,6 +1,6 @@
 import { User } from "./User";
 
-export interface ApiResponse {
+export interface PageResponse {
     page: number;
     per_page: number;
     total: number;

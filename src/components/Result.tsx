@@ -6,9 +6,9 @@ import Card from './Card';
 import PaginationControl from './PaginationControl';
 import SearchInput from './SearchInput';
 import { User } from '@/types/User';
-import { ApiResponse } from '@/types/ApiResponse';
 import axios from 'axios';
 import { usePagination } from '@/hooks/usePagination';
+import { PageResponse } from '@/types/PageResponse';
 
 
 const useFetchData = (query: ParsedUrlQuery) => {
@@ -22,8 +22,8 @@ const useFetchData = (query: ParsedUrlQuery) => {
       const url = `https://reqres.in/api/users?page=${page}&per_page=${per_page}`;
 
       try {
-        const response = await axios.get<ApiResponse>(url);
-        const jsonData: ApiResponse = response.data;
+        const response = await axios.get<PageResponse>(url);
+        const jsonData: PageResponse = response.data;
         setOriginalData(jsonData.data);
         setData(jsonData.data);
       } catch (error) {
