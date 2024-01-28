@@ -50,7 +50,7 @@ const Result = () => {
   const handleSearch = useCallback(async (searchValue: string) => {
     setSearchInput(searchValue);
 
-    if (searchValue === '') {
+    if (searchValue.trim() === '') {
       setData(originalData);
       setSearchMessage('');
     } else {
