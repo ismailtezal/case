@@ -2,13 +2,8 @@ import React, { useState } from 'react';
 import { Loader } from 'lucide-react';
 import UserNameInput from './UserNameInput';
 import JobNameInput from './JobNameInput';
-
-interface UserResponse {
-  id: number;
-  name: string;
-  job: string;
-  createdAt: string;
-}
+import { UserResponse } from '@/types/User';
+import AddedUser from './AddedUser';
 
 interface AddUserFormProps {}
 
@@ -42,7 +37,6 @@ const AddUserForm: React.FC<AddUserFormProps> = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Check if userName and jobName are not empty before submitting
     if (!userName.trim() || !jobName.trim()) {
       console.error('Please fill out all fields');
       return;
@@ -59,43 +53,25 @@ const AddUserForm: React.FC<AddUserFormProps> = () => {
     }
   };
 
+  const isFormValid = userName.trim() && jobName.trim();
+
   return (
     <div className='flex flex-col m-4 rounded-md p-4 bg-blue-500'>
       <form className='space-x-2 flex items-center' onSubmit={handleSubmit}>
         <UserNameInput value={userName} handleSearch={setUserName} />
         <JobNameInput value={jobName} handleSearch={setJobName} />
         <button
-          className='disabled:bg-blue-300 px-4 py-2 bg-blue-50 text-blue-500 rounded-md'
+          className={`disabled:bg-blue-300 px-4 py-2 bg-blue-50 text-blue-500 rounded-md ${
+            loading || !isFormValid ? 'cursor-not-allowed' : ''
+          }`}
           type='submit'
-          disabled={loading || !userName.trim() || !jobName.trim()}
+          disabled={loading || !isFormValid}
         >
           {loading ? <Loader className='animate-spin' /> : 'Add User'}
         </button>
       </form>
 
-      {addedUser && (
-        <div className='mt-4 text-white'>
-          <h3 className='text-lg font-bold'>Added User</h3>
-          <div className='flex flex-col'>
-            <div className='flex'>
-              <span className='font-bold'>Id:</span>
-              <span className='ml-2'>{addedUser.id}</span>
-            </div>
-            <div className='flex'>
-              <span className='font-bold'>Name:</span>
-              <span className='ml-2'>{addedUser.name}</span>
-            </div>
-            <div className='flex'>
-              <span className='font-bold'>Job:</span>
-              <span className='ml-2'>{addedUser.job}</span>
-            </div>
-            <div className='flex'>
-              <span className='font-bold'>Created At:</span>
-              <span className='ml-2'>{new Date(addedUser.createdAt).toLocaleString()}</span>
-            </div>
-          </div>
-        </div>
-      )}
+      {addedUser && <AddedUser addedUser={addedUser} />}
     </div>
   );
 };
