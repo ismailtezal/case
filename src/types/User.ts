@@ -5,3 +5,10 @@ export interface User {
     last_name: string;
     avatar: string;
 }
+
+export interface UserResponse {
+    id: number;
+    name: string;
+    job: string;
+    createdAt: string;
+  }
