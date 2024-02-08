@@ -1,4 +1,4 @@
-import { ApiResponse } from "@/types/PageResponse";
+import { PageResponse } from "@/types/PageResponse";
 import { User } from "@/types/User";
 
 export interface ApiServiceResult {
@@ -11,7 +11,7 @@ export const fetchData = async (page: number, perPage: number): Promise<ApiServi
 
     try {
         const response = await fetch(url);
-        const jsonData: ApiResponse = await response.json();
+        const jsonData: PageResponse = await response.json();
         return { data: jsonData.data, total: jsonData.total };
     } catch (error) {
         console.error('Error fetching data:', error);
