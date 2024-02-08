@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useState } from 'react';
 import { ParsedUrlQuery } from 'querystring';
 import { useRouter } from 'next/router';
 
@@ -15,7 +15,7 @@ const useFetchData = (query: ParsedUrlQuery) => {
   const [data, setData] = useState<User[]>([]);
   const [originalData, setOriginalData] = useState<User[]>([]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const fetchData = async () => {
       const page = query['page'] ?? '1';
       const per_page = query['per_page'] ?? '5';

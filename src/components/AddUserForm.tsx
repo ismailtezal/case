@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import { Loader } from 'lucide-react';
 import UserNameInput from './UserNameInput';
 import JobNameInput from './JobNameInput';
 import { UserResponse } from '@/types/User';
 import AddedUser from './AddedUser';
 
-interface AddUserFormProps {}
+interface AddUserFormProps { }
 
 const AddUserForm: React.FC<AddUserFormProps> = () => {
   const [userName, setUserName] = useState('');
@@ -61,13 +60,12 @@ const AddUserForm: React.FC<AddUserFormProps> = () => {
         <UserNameInput value={userName} handleSearch={setUserName} />
         <JobNameInput value={jobName} handleSearch={setJobName} />
         <button
-          className={`disabled:bg-blue-300 px-4 py-2 bg-blue-50 text-blue-500 rounded-md ${
-            loading || !isFormValid ? 'cursor-not-allowed' : ''
-          }`}
+          className={`disabled:bg-blue-300 px-4 py-2 bg-blue-50 text-blue-500 rounded-md ${loading || !isFormValid ? 'cursor-not-allowed' : ''
+            }`}
           type='submit'
           disabled={loading || !isFormValid}
         >
-          {loading ? <Loader className='animate-spin' /> : 'Add User'}
+          {loading ? <div className='animate-spin' /> : 'Add User'}
         </button>
       </form>
 
